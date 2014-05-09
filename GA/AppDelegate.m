@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "Scheduler.h"
 
 @implementation AppDelegate
 
@@ -17,6 +18,31 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Insert code here to initialize your application
+    
+    
+    
+//    NSMutableArray *indexes = [NSMutableArray array];
+//    NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init];
+//    
+//    for (int index = 0; index < 10; index++) {
+//        int dec = 0;
+//        
+//        while ([indexSet containsIndex:dec * 10]) {
+//            dec = arc4random_uniform(9) + 1;
+//        }
+//        
+//        [indexSet addIndex:dec * 10];
+//        
+//        for (int i = dec * 10; i < (dec + 1) * 10; i++) {
+//            [indexes addObject:[NSNumber numberWithInt:i]];
+//        }
+//    }
+    
+}
+
+- (void) applicationDidBecomeActive:(NSNotification *)notification {
+    Scheduler * scheuler = [[Scheduler alloc] init];
+    [scheuler run];
 }
 
 // Returns the directory the application uses to store the Core Data store file. This code uses a directory named "com.ItDoesNotMatter.GA" in the user's Application Support directory.

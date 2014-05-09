@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B37653C1887138E0007D08B /* Gen.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B37653B1887138E0007D08B /* Gen.m */; };
 		8B66B4B41885C01D0054D23D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B66B4B31885C01D0054D23D /* Cocoa.framework */; };
 		8B66B4BE1885C01D0054D23D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B66B4BC1885C01D0054D23D /* InfoPlist.strings */; };
 		8B66B4C01885C01D0054D23D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B66B4BF1885C01D0054D23D /* main.m */; };
@@ -19,6 +20,9 @@
 		8B66B4D71885C01D0054D23D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B66B4B31885C01D0054D23D /* Cocoa.framework */; };
 		8B66B4DF1885C01D0054D23D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B66B4DD1885C01D0054D23D /* InfoPlist.strings */; };
 		8B66B4E11885C01D0054D23D /* GATests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B66B4E01885C01D0054D23D /* GATests.m */; };
+		8B66B4EC1885C0650054D23D /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B66B4EB1885C0650054D23D /* Task.m */; };
+		8B66B4EF1885C0C60054D23D /* Processor.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B66B4EE1885C0C60054D23D /* Processor.m */; };
+		8B66B4F21885C2030054D23D /* Scheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B66B4F11885C2030054D23D /* Scheduler.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8B37653A1887138E0007D08B /* Gen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gen.h; sourceTree = "<group>"; };
+		8B37653B1887138E0007D08B /* Gen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Gen.m; sourceTree = "<group>"; };
 		8B66B4B01885C01D0054D23D /* GA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B66B4B31885C01D0054D23D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		8B66B4B61885C01D0054D23D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -52,6 +58,12 @@
 		8B66B4DC1885C01D0054D23D /* GATests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GATests-Info.plist"; sourceTree = "<group>"; };
 		8B66B4DE1885C01D0054D23D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8B66B4E01885C01D0054D23D /* GATests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GATests.m; sourceTree = "<group>"; };
+		8B66B4EA1885C0650054D23D /* Task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Task.h; sourceTree = "<group>"; };
+		8B66B4EB1885C0650054D23D /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Task.m; sourceTree = "<group>"; };
+		8B66B4ED1885C0C60054D23D /* Processor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Processor.h; sourceTree = "<group>"; };
+		8B66B4EE1885C0C60054D23D /* Processor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Processor.m; sourceTree = "<group>"; };
+		8B66B4F01885C2030054D23D /* Scheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scheduler.h; sourceTree = "<group>"; };
+		8B66B4F11885C2030054D23D /* Scheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scheduler.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +135,14 @@
 				8B66B4CE1885C01D0054D23D /* Images.xcassets */,
 				8B66B4CB1885C01D0054D23D /* GA.xcdatamodeld */,
 				8B66B4BA1885C01D0054D23D /* Supporting Files */,
+				8B66B4EA1885C0650054D23D /* Task.h */,
+				8B66B4EB1885C0650054D23D /* Task.m */,
+				8B66B4ED1885C0C60054D23D /* Processor.h */,
+				8B66B4EE1885C0C60054D23D /* Processor.m */,
+				8B66B4F01885C2030054D23D /* Scheduler.h */,
+				8B66B4F11885C2030054D23D /* Scheduler.m */,
+				8B37653A1887138E0007D08B /* Gen.h */,
+				8B37653B1887138E0007D08B /* Gen.m */,
 			);
 			path = GA;
 			sourceTree = "<group>";
@@ -255,6 +275,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B37653C1887138E0007D08B /* Gen.m in Sources */,
+				8B66B4EC1885C0650054D23D /* Task.m in Sources */,
+				8B66B4F21885C2030054D23D /* Scheduler.m in Sources */,
+				8B66B4EF1885C0C60054D23D /* Processor.m in Sources */,
 				8B66B4C71885C01D0054D23D /* AppDelegate.m in Sources */,
 				8B66B4C01885C01D0054D23D /* main.m in Sources */,
 				8B66B4CD1885C01D0054D23D /* GA.xcdatamodeld in Sources */,
@@ -468,6 +492,7 @@
 				8B66B4E61885C01E0054D23D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8B66B4E71885C01E0054D23D /* Build configuration list for PBXNativeTarget "GATests" */ = {
 			isa = XCConfigurationList;
@@ -476,6 +501,7 @@
 				8B66B4E91885C01E0054D23D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
