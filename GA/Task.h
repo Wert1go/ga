@@ -10,7 +10,6 @@
 
 @interface Task : NSObject
 
-@property (nonatomic, assign) CGFloat executionTime;
 @property (nonatomic, assign) NSInteger requeredProcessResource;
 
 @end

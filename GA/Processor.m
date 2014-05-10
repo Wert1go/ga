@@ -15,11 +15,13 @@
 - (id)init
 {
     self = [super init];
+    
     if (self) {
         self.taskQueue = [NSMutableArray array];
         self.totalResourceSize = 100;
         self.freeResourceSize = self.totalResourceSize;
     }
+    
     return self;
 }
 

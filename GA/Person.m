@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 ItDoesNotMatter Inc. All rights reserved.
 //
 
-#import "Gen.h"
+#import "Person.h"
 #import "Processor.h"
 
-@implementation Gen
+@implementation Person
 
 - (id)init
 {
@@ -21,7 +21,9 @@
         Processor *pro4 = [[Processor alloc] init];
         
         self.processors = @[pro1, pro2, pro3, pro4];
+        self.hash = [NSMutableDictionary dictionary];
     }
+    
     return self;
 }
 

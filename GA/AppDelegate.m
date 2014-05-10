@@ -18,26 +18,6 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     // Insert code here to initialize your application
-    
-    
-    
-//    NSMutableArray *indexes = [NSMutableArray array];
-//    NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init];
-//    
-//    for (int index = 0; index < 10; index++) {
-//        int dec = 0;
-//        
-//        while ([indexSet containsIndex:dec * 10]) {
-//            dec = arc4random_uniform(9) + 1;
-//        }
-//        
-//        [indexSet addIndex:dec * 10];
-//        
-//        for (int i = dec * 10; i < (dec + 1) * 10; i++) {
-//            [indexes addObject:[NSNumber numberWithInt:i]];
-//        }
-//    }
-    
 }
 
 - (void) applicationDidBecomeActive:(NSNotification *)notification {

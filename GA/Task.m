@@ -13,10 +13,11 @@
 - (id)init
 {
     self = [super init];
+    
     if (self) {
         self.requeredProcessResource = arc4random_uniform(100);
-        self.executionTime = self.requeredProcessResource % 10 * 5;
     }
+    
     return self;
 }
 

@@ -8,15 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Gen : NSObject
-
-@property (nonatomic, strong) NSArray *genes;
-
-@property (nonatomic, assign) NSInteger leftHalf;
-@property (nonatomic, assign) NSInteger rightHalf;
+@interface Person : NSObject
 
 @property (nonatomic, strong) NSArray *processors;
 
 @property (nonatomic, assign) NSUInteger fitProIndex;
+
+@property (nonatomic, strong) NSMutableDictionary *hash;
 
 @end

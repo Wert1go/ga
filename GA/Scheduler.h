@@ -11,10 +11,7 @@
 @interface Scheduler : NSObject
 
 @property (nonatomic, strong) NSMutableArray *taskQueue;
-@property (nonatomic, strong) NSMutableArray *taskIndexes;
 
 - (void) run;
-
-- (void) optimize;
 
 @end

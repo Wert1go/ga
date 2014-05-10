@@ -10,13 +10,6 @@
 
 @class Task;
 
-@protocol TaskManagmentProtocol <NSObject>
-
-@optional
-- (void) didCompliteTask: (Task *)task;
-
-@end
-
 @interface Processor : NSObject
 
 @property (nonatomic, assign) NSUInteger totalResourceSize;
@@ -25,8 +18,6 @@
 @property (nonatomic, readonly) NSUInteger loadedBy;
 
 @property (nonatomic, strong) NSMutableArray *taskQueue;
-
-@property (nonatomic, assign) id<TaskManagmentProtocol> taskScheduler;
 
 - (void) postTask: (Task *) task;
 - (void) flush;
