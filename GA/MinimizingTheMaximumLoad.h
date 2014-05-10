@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) NSMutableArray *taskQueue;
 
-- (void) run;
+- (void)run;
+- (void)runWithoutGA;
 
 @end

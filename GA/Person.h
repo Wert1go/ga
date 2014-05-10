@@ -18,4 +18,6 @@
 
 + (Person *)createWithTaskArray:(NSArray *)tasks;
 
+- (NSInteger)optimalValue;
+
 @end

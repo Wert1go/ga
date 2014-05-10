@@ -50,6 +50,11 @@
     return person;
 }
 
+- (NSInteger)optimalValue {
+    Processor *processor = self.processors[self.fitProIndex];
+    return processor.loadedBy;
+}
+
 - (NSString *)description {
     NSMutableString *descr = [[NSMutableString alloc] init];
     

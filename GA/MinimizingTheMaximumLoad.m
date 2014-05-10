@@ -40,7 +40,9 @@
 {
     self = [super init];
     if (self) {
-        [self createTastQueueFromArray:[self generateRandomTaskQueue]];
+//        [self createTastQueueFromArray:[self generateRandomTaskQueue]];
+        [self createTastQueueFromArray:REFERENCE];
+        
     }
     
     return self;
@@ -52,6 +54,47 @@
     [self optimize];
     [self printResult];
     NSLog(@"END");
+}
+
+- (void)runWithoutGA {
+    
+    NSInteger lauchCount = GENERATION_LIMIT;
+    
+    CGFloat successRateSum = 0;
+    CGFloat failRateSum = 0;
+    
+    while (lauchCount != 0) {
+        
+        [self createFirstGeneration];
+        
+        __block CGFloat successCount = 0;
+        __block CGFloat failCount = 0;
+        
+        [self.population enumerateObjectsUsingBlock:^(Person *person, NSUInteger idx, BOOL *stop) {
+            if (person.optimalValue <= 60) {
+                successCount++;
+            } else if (person.optimalValue >= 80) {
+                failCount++;
+            }
+        }];
+        
+        NSLog(@"%f", (successCount * 100)/POPULATION_SIZE);
+        NSLog(@"%f", (failCount * 100)/POPULATION_SIZE);
+        
+        successRateSum += (successCount * 100)/POPULATION_SIZE;
+        failRateSum += (failCount * 100)/POPULATION_SIZE;
+        
+        lauchCount--;
+    }
+    
+    NSLog(@"successRateSum %f", successRateSum);
+    NSLog(@"failRateSum %f", failRateSum);
+
+    CGFloat successRate = successRateSum/GENERATION_LIMIT;
+    CGFloat failRate = failRateSum/GENERATION_LIMIT;
+    
+    NSLog(@"successRate: %f", successRate);
+    NSLog(@"failRate: %f", failRate);
 }
 
 - (void)optimize {

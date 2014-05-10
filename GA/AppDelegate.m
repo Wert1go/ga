@@ -22,7 +22,7 @@
 
 - (void) applicationDidBecomeActive:(NSNotification *)notification {
     MinimizingTheMaximumLoad * scheuler = [[MinimizingTheMaximumLoad alloc] init];
-    [scheuler run];
+    [scheuler runWithoutGA];
 }
 
 // Returns the directory the application uses to store the Core Data store file. This code uses a directory named "com.ItDoesNotMatter.GA" in the user's Application Support directory.
