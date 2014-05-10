@@ -22,7 +22,7 @@
 		8B66B4E11885C01D0054D23D /* GATests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B66B4E01885C01D0054D23D /* GATests.m */; };
 		8B66B4EC1885C0650054D23D /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B66B4EB1885C0650054D23D /* Task.m */; };
 		8B66B4EF1885C0C60054D23D /* Processor.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B66B4EE1885C0C60054D23D /* Processor.m */; };
-		8B66B4F21885C2030054D23D /* Scheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B66B4F11885C2030054D23D /* Scheduler.m */; };
+		8B66B4F21885C2030054D23D /* MinimizingTheMaximumLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B66B4F11885C2030054D23D /* MinimizingTheMaximumLoad.m */; };
 		8BF2B872191E6E6200E81056 /* NSMutableArray+Shuffling.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BF2B871191E6E6200E81056 /* NSMutableArray+Shuffling.m */; };
 /* End PBXBuildFile section */
 
@@ -63,8 +63,8 @@
 		8B66B4EB1885C0650054D23D /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Task.m; sourceTree = "<group>"; };
 		8B66B4ED1885C0C60054D23D /* Processor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Processor.h; sourceTree = "<group>"; };
 		8B66B4EE1885C0C60054D23D /* Processor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Processor.m; sourceTree = "<group>"; };
-		8B66B4F01885C2030054D23D /* Scheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scheduler.h; sourceTree = "<group>"; };
-		8B66B4F11885C2030054D23D /* Scheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Scheduler.m; sourceTree = "<group>"; };
+		8B66B4F01885C2030054D23D /* MinimizingTheMaximumLoad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MinimizingTheMaximumLoad.h; sourceTree = "<group>"; };
+		8B66B4F11885C2030054D23D /* MinimizingTheMaximumLoad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MinimizingTheMaximumLoad.m; sourceTree = "<group>"; };
 		8BF2B870191E6E6200E81056 /* NSMutableArray+Shuffling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSMutableArray+Shuffling.h"; path = "GA/Utils/NSMutableArray+Shuffling.h"; sourceTree = "<group>"; };
 		8BF2B871191E6E6200E81056 /* NSMutableArray+Shuffling.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSMutableArray+Shuffling.m"; path = "GA/Utils/NSMutableArray+Shuffling.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -143,8 +143,8 @@
 				8B66B4EB1885C0650054D23D /* Task.m */,
 				8B66B4ED1885C0C60054D23D /* Processor.h */,
 				8B66B4EE1885C0C60054D23D /* Processor.m */,
-				8B66B4F01885C2030054D23D /* Scheduler.h */,
-				8B66B4F11885C2030054D23D /* Scheduler.m */,
+				8B66B4F01885C2030054D23D /* MinimizingTheMaximumLoad.h */,
+				8B66B4F11885C2030054D23D /* MinimizingTheMaximumLoad.m */,
 				8B37653A1887138E0007D08B /* Person.h */,
 				8B37653B1887138E0007D08B /* Person.m */,
 			);
@@ -291,7 +291,7 @@
 				8BF2B872191E6E6200E81056 /* NSMutableArray+Shuffling.m in Sources */,
 				8B37653C1887138E0007D08B /* Person.m in Sources */,
 				8B66B4EC1885C0650054D23D /* Task.m in Sources */,
-				8B66B4F21885C2030054D23D /* Scheduler.m in Sources */,
+				8B66B4F21885C2030054D23D /* MinimizingTheMaximumLoad.m in Sources */,
 				8B66B4EF1885C0C60054D23D /* Processor.m in Sources */,
 				8B66B4C71885C01D0054D23D /* AppDelegate.m in Sources */,
 				8B66B4C01885C01D0054D23D /* main.m in Sources */,

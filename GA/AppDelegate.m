@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "Scheduler.h"
+#import "MinimizingTheMaximumLoad.h"
 
 @implementation AppDelegate
 
@@ -21,7 +21,7 @@
 }
 
 - (void) applicationDidBecomeActive:(NSNotification *)notification {
-    Scheduler * scheuler = [[Scheduler alloc] init];
+    MinimizingTheMaximumLoad * scheuler = [[MinimizingTheMaximumLoad alloc] init];
     [scheuler run];
 }
 

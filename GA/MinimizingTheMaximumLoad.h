@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Scheduler : NSObject
+@interface MinimizingTheMaximumLoad : NSObject
 
 @property (nonatomic, strong) NSMutableArray *taskQueue;
 

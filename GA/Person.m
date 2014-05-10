@@ -8,6 +8,7 @@
 
 #import "Person.h"
 #import "Processor.h"
+#import "Task.h"
 
 @implementation Person
 
@@ -25,6 +26,28 @@
     }
     
     return self;
+}
+
++ (Person *)createWithTaskArray:(NSArray *)taskArray {
+    Person *person = [[Person alloc] init];
+    
+    NSMutableArray *tasks = taskArray.mutableCopy;
+    NSInteger taskCount = tasks.count;
+    while (taskCount != 0) {
+        NSInteger proIndex = arc4random_uniform((unsigned int)person.processors.count);
+        Processor *pro = person.processors[proIndex];
+        
+        NSInteger taskIndex = arc4random_uniform((unsigned int)taskCount);
+        Task *task = tasks[taskIndex];
+        
+        if (pro.freeResourceSize >= task.requeredProcessResource) {
+            [pro postTask:task];
+            --taskCount;
+            [tasks removeObject:task];
+        }
+    }
+    
+    return person;
 }
 
 - (NSString *)description {

@@ -16,4 +16,6 @@
 
 @property (nonatomic, strong) NSMutableDictionary *hash;
 
++ (Person *)createWithTaskArray:(NSArray *)tasks;
+
 @end

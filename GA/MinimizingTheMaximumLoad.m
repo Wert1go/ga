@@ -5,8 +5,11 @@
 //  Created by Yuri Ageev on 14.01.14.
 //  Copyright (c) 2014 ItDoesNotMatter Inc. All rights reserved.
 //
+//
+//  Задача по минимизации максимальной нагрузки на 4-х процессорную систему
+//
 
-#import "Scheduler.h"
+#import "MinimizingTheMaximumLoad.h"
 #import "Task.h"
 #import "Processor.h"
 #import "Person.h"
@@ -17,11 +20,12 @@
 
 #define GENERATION_LIMIT    100
 
+//эталонная очередь задач, порог оптимизации 60
 #define REFERENCE           @[@10, @20, @10, @30, @20, @40, @30, @10, @30, @20]
 
 #define MAX_CAPACITY        210
 
-@interface Scheduler ()
+@interface MinimizingTheMaximumLoad ()
 
 @property (nonatomic, assign) NSUInteger generationNumber;
 @property (nonatomic, strong) NSMutableArray *population;
@@ -30,7 +34,7 @@
 
 @end
 
-@implementation Scheduler
+@implementation MinimizingTheMaximumLoad
 
 - (id)init
 {
@@ -43,9 +47,8 @@
 }
 
 - (void)run {
-
+    
     [self createFirstGeneration];
-
     [self optimize];
     [self printResult];
     NSLog(@"END");
@@ -89,49 +92,40 @@
 
 - (void)populate {
     for (int index = 0; index < POPULATION_SIZE; index++) {
-        Person *person = [self create];
+        Person *person = [self createPerson];
         [self fitness:person];
         [self.population addObject:person];
     }
 }
 
-- (Person *)create {
-    /*
-     
-     Ген представляет собой экзепляр системы с 4 процессорами.
-     Ниже имеющиеся задачи случайным образом распределяются между имеющимися процессорами.
-     
-     Алгоритм:
-     1. из списка процессоров выбирается случайный процессор
-     2. из очереди берется случайная задача
-     3. если у процессора достаточно ресурсов для исполнения задачи, она ставится в его очередь и удаляется из общего списка
-     иначе возвращение к п. 1
-     
-     
-     */
-    
-    Person *gen = [[Person alloc] init];
+/*
+ 
+ Ген представляет собой экзепляр системы с 4 процессорами.
+ Ниже имеющиеся задачи случайным образом распределяются между имеющимися процессорами.
+ 
+ Алгоритм:
+ 1. из списка процессоров выбирается случайный процессор
+ 2. из очереди берется случайная задача
+ 3. если у процессора достаточно ресурсов для исполнения задачи, она ставится в его очередь и удаляется из общего списка
+ иначе возвращение к п. 1
+ 
+ 
+ */
 
-    NSMutableArray *tasks = self.taskQueue.mutableCopy;
-    NSInteger taskCount = tasks.count;
-    while (taskCount != 0) {
-        NSInteger proIndex = arc4random_uniform((unsigned int)gen.processors.count);
-        Processor *pro = gen.processors[proIndex];
-        
-        NSInteger taskIndex = arc4random_uniform((unsigned int)taskCount);
-        Task *task = tasks[taskIndex];
-        
-        if (pro.freeResourceSize >= task.requeredProcessResource) {
-            [pro postTask:task];
-            --taskCount;
-            [tasks removeObject:task];
-        }
-    }
+- (Person *)createPerson {
     
-    return gen;
+    Person *person = [Person createWithTaskArray:self.taskQueue];
+    return person;
 }
 
+/*
+ 
+ Особи популяции перемешиваются между собой, и затем попарно скрещиваются
+ 
+ */
+
 - (void)crossover {
+    
     [self.population shuffle];
     
     for (int index = 0; index < POPULATION_SIZE; index += 2) {
@@ -142,6 +136,24 @@
         [self.population addObject:child];
     }
 }
+
+/*
+ 
+ Из пары родителей определяется доминирующий
+ У доминантного родителя определяется параметр максимальной нагрузки
+ Потомок создается на основе ДНК доминирующего родителя
+ 
+ После создания потомка запускается цикл скрещивания, в нем происходит сравнение очередей задач у процессоров потомка с очередями задач процессоров второго родителя.
+ 
+ Сравнение происходит следующим образом
+ 
+ В цикле происходит обход всех процессоров потомка, на каждом цикле в очередь задача процессора потомка происходит пропытка добавить задачу из очереди задач второго родителя (процессоры с их очередями обходятся в циклах). Успех попытки определяется исходя из условия:
+ 
+ Текущая загрузка процессора потомка + требуемый для выполнения задачи ресурс <= Текущей параметр максимальной загрузки доминантного родителя
+ 
+ Если условие исполняется, то задача добавляется в очередь процессора потомка, и удаляется и очереди задач второго родителя (таким образом достигается согласованность данных).
+ 
+ */
 
 - (Person *)crossingParent1:(Person *) parent1 parent2:(Person *) parent2 {
     
@@ -200,7 +212,7 @@
                 
                 if (![childGenes.taskQueue containsObject:task]) {
                     
-                    if (childGenes.loadedBy + task.requeredProcessResource < dominatedGen.loadedBy) {
+                    if (childGenes.loadedBy + task.requeredProcessResource <= dominatedGen.loadedBy) {
                         [childGenes postTask:task];
                         [toRemove addObject:task];
                     }
@@ -230,6 +242,13 @@
     return child;
 }
 
+/*
+ 
+ Для каждой особи популяции определяется параметр приспособленности - наибольшая загруженность одного из 4х процессоров.
+ После особи сортируются по этому показателю от меньшего к большему. Отбор проходит количество особей равное начальному объему популяции, остальные уничтожаются.
+ 
+ */
+
 - (void)selection {
     self.selected = [NSMutableArray array];
     self.fitnessHash = [NSMutableDictionary dictionary];
@@ -252,6 +271,7 @@
     }
 }
 
+
 - (void)createNewGeneration {
     self.population = [[NSMutableArray alloc] init];
     
@@ -259,14 +279,14 @@
         if (index < self.selected.count) {
             [self.population addObject:self.selected[index]];
         } else {
-            Person *gen = [self create];
+            Person *gen = [self createPerson];
             [self fitness:gen];
             [self.population addObject:gen];
         }
     }
 }
 
-- (NSInteger)fitness: (Person *)gen{
+- (NSInteger)fitness:(Person *)gen{
     
     __block NSUInteger loadedBy = 0;
     [gen.processors enumerateObjectsUsingBlock:^(Processor *pro, NSUInteger idx, BOOL *stop) {
@@ -305,8 +325,6 @@
             [tasks addObject:@(taskCapacity)];
         }
     }
-
-    NSLog(@"tasks: %@", tasks);
     
     return tasks;
 }
