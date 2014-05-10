@@ -11,11 +11,15 @@
 #import "Processor.h"
 #import "Person.h"
 
-#define QUEUE_SIZE          100
-#define POPULATION_SIZE     20
-#define SELECTED_SIZE       10
+#import "NSMutableArray+Shuffling.h"
 
-#define GENERATION_LIMIT    100000
+#define POPULATION_SIZE     20
+
+#define GENERATION_LIMIT    100
+
+#define REFERENCE           @[@10, @20, @10, @30, @20, @40, @30, @10, @30, @20]
+
+#define MAX_CAPACITY        210
 
 @interface Scheduler ()
 
@@ -32,7 +36,7 @@
 {
     self = [super init];
     if (self) {
-        [self createTaskQueue];
+        [self createTastQueueFromArray:[self generateRandomTaskQueue]];
     }
     
     return self;
@@ -41,6 +45,7 @@
 - (void)run {
 
     [self createFirstGeneration];
+
     [self optimize];
     [self printResult];
     NSLog(@"END");
@@ -49,7 +54,7 @@
 - (void)optimize {
     NSAssert(self.taskQueue.count > 0, @"LOL");
     
-    BOOL isRunning = YES;
+    __block BOOL isRunning = YES;
     
     while (self.generationNumber < GENERATION_LIMIT && isRunning) {
         
@@ -58,8 +63,21 @@
         [self selection];
 
         [self createNewGeneration];
-
-        self.generationNumber++;
+        
+        __block NSUInteger counter = 0;
+        [self.population enumerateObjectsUsingBlock:^(Person *person, NSUInteger idx, BOOL *stop) {
+            Processor *processor = person.processors[person.fitProIndex];
+            if (processor.loadedBy <= 60) {
+                counter++;
+            }
+        }];
+        
+        if (counter >= (POPULATION_SIZE * 80)/100) {
+            isRunning = NO;
+        } else {
+            [self printResult];
+            self.generationNumber++;
+        }
     }
 }
 
@@ -71,7 +89,9 @@
 
 - (void)populate {
     for (int index = 0; index < POPULATION_SIZE; index++) {
-        [self.population addObject:[self create]];
+        Person *person = [self create];
+        [self fitness:person];
+        [self.population addObject:person];
     }
 }
 
@@ -112,18 +132,14 @@
 }
 
 - (void)crossover {
-    NSMutableArray *crossingResult = [NSMutableArray array];
+    [self.population shuffle];
     
     for (int index = 0; index < POPULATION_SIZE; index += 2) {
         Person *parent1 = self.population[index];
         Person *parent2 = self.population[index + 1];
         
         Person *child = [self crossingParent1:parent1 parent2:parent2];
-        [crossingResult addObject:child];
-    }
-    
-    for (int index = 0; index < crossingResult.count; index++) {
-        [self.population replaceObjectAtIndex:index withObject:crossingResult[index]];
+        [self.population addObject:child];
     }
 }
 
@@ -131,6 +147,11 @@
     
     Processor *pro1 = parent1.processors[parent1.fitProIndex];
     Processor *pro2 = parent2.processors[parent2.fitProIndex];
+    
+    NSLog(@"CROSSING");
+    
+    NSLog(@"parent 1: %@", parent1);
+    NSLog(@"parent 2: %@", parent2);
     
     Person *dominatedParent;
     Person *secondParent;
@@ -149,69 +170,64 @@
         secondParent = parent2;
         secondGen = pro2;
     }
-
-    NSMutableArray *pros = [NSMutableArray arrayWithCapacity:4];
     
-    pros[0] = dominatedGen;
-    pros[1] = [[Processor alloc] init];
-    pros[2] = [[Processor alloc] init];
-    pros[3] = [[Processor alloc] init];;
-
-    dominatedParent.processors = [NSArray arrayWithArray:pros];
+    Person *tempSecondParent = [[Person alloc] init];
     
-    NSMutableArray *tasks = self.taskQueue.mutableCopy;
-    NSInteger taskCount = tasks.count;
+    [secondParent.processors enumerateObjectsUsingBlock:^(Processor *parentGenes, NSUInteger idx, BOOL *stop) {
+        Processor *childGenes = tempSecondParent.processors[idx];
+        [parentGenes.taskQueue enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [childGenes postTask:obj];
+        }];
+    }];
     
-    while (taskCount != 0) {
-       
-        NSInteger proIndex = arc4random_uniform((unsigned int)dominatedParent.processors.count);
-
-        if (proIndex == 0) continue;
-        
-        Processor *pro = dominatedParent.processors[proIndex];
-        NSInteger taskIndex = arc4random_uniform((unsigned int)taskCount);
-        Task *task = tasks[taskIndex];
-        
-        if ([dominatedGen.taskQueue containsObject:task]) {
-            --taskCount;
-            [tasks removeObject:task];
-            continue;
-        }
-        
-        NSUInteger nIndex = NSNotFound;
-        
-        if (proIndex + 1 < dominatedParent.processors.count) {
-            nIndex = proIndex + 1;
-        } else if (nIndex - 1 != 0) {
-            nIndex = proIndex - 1;
-        }
-        
-        if (nIndex != NSNotFound) {
-            Processor *nPro = dominatedParent.processors[nIndex];
+    secondParent = tempSecondParent;
+    
+    Person *child = [[Person alloc] init];
+    
+    [dominatedParent.processors enumerateObjectsUsingBlock:^(Processor *parentGenes, NSUInteger idx, BOOL *stop) {
+        Processor *childGenes = child.processors[idx];
+        [parentGenes.taskQueue enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [childGenes postTask:obj];
+        }];
+    }];
+    
+    [child.processors enumerateObjectsUsingBlock:^(Processor *childGenes, NSUInteger index, BOOL *stop) {
+        for (NSInteger secondIndex = 0; secondIndex < secondParent.processors.count; secondIndex++) {
+            Processor *secondParentGenes = secondParent.processors[secondIndex];
             
-            if (nPro.loadedBy > pro.loadedBy) {
-                if (pro.freeResourceSize >= task.requeredProcessResource) {
-                    [pro postTask:task];
-                    --taskCount;
-                    [tasks removeObject:task];
+            NSMutableArray *toRemove = [NSMutableArray array];
+            [secondParentGenes.taskQueue enumerateObjectsUsingBlock:^(Task *task, NSUInteger idx, BOOL *stop) {
+                
+                if (![childGenes.taskQueue containsObject:task]) {
+                    
+                    if (childGenes.loadedBy + task.requeredProcessResource < dominatedGen.loadedBy) {
+                        [childGenes postTask:task];
+                        [toRemove addObject:task];
+                    }
                 }
-            } else {
-                if (nPro.freeResourceSize >= task.requeredProcessResource) {
-                    [nPro postTask:task];
-                    --taskCount;
-                    [tasks removeObject:task];
+            }];
+
+            [toRemove enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                [secondParentGenes removeTask:obj];
+            }];
+            
+            [child.processors enumerateObjectsUsingBlock:^(Processor *processor, NSUInteger idx, BOOL *stop) {
+                if (idx != index) {
+                    [toRemove enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                        if ([processor.taskQueue containsObject:obj]) {
+                            [processor removeTask:obj];
+                        }
+                    }];
                 }
-            }
-        } else {
-            if (pro.freeResourceSize >= task.requeredProcessResource) {
-                [pro postTask:task];
-                --taskCount;
-                [tasks removeObject:task];
-            }
+            }];
+            
         }
-    }
+    }];
     
-    return dominatedParent;
+    [self fitness:child];
+    NSLog(@"Child: %@", child);
+    
+    return child;
 }
 
 - (void)selection {
@@ -231,7 +247,7 @@
     NSSortDescriptor *lowestToHighest = [NSSortDescriptor sortDescriptorWithKey:@"self" ascending:YES];
     [fintessResults sortUsingDescriptors:[NSArray arrayWithObject:lowestToHighest]];
     
-    for (int index = 0; index < 10; index++) {
+    for (int index = 0; index < POPULATION_SIZE; index++) {
         [self.selected addObject:self.fitnessHash[fintessResults[index]]];
     }
 }
@@ -266,51 +282,47 @@
 #pragma mark - Utils
 
 - (void)createTaskQueue {
+    [self createTastQueueFromArray:REFERENCE];
+}
+
+- (void)createTastQueueFromArray:(NSArray *)taskArray {
     self.taskQueue = [NSMutableArray array];
     
-    Task *task = [[Task alloc] init];
-    task.requeredProcessResource = 10;
-    [self.taskQueue addObject:task];
+    [taskArray enumerateObjectsUsingBlock:^(NSNumber *taskRequeredResources, NSUInteger idx, BOOL *stop) {
+        Task *task = [[Task alloc] init];
+        task.requeredProcessResource = taskRequeredResources.integerValue;
+        [self.taskQueue addObject:task];
+    }];
+}
+
+- (NSArray *)generateRandomTaskQueue {
+    NSInteger maxCapacity = MAX_CAPACITY;
+    NSMutableArray *tasks = [NSMutableArray array];
     
-    task = [[Task alloc] init];
-    task.requeredProcessResource = 20;
-    [self.taskQueue addObject:task];
+    while ([self sumCapacity:tasks] < maxCapacity) {
+        NSInteger taskCapacity = (arc4random_uniform(4) + 1) * 10;
+        if ([self sumCapacity:tasks] + taskCapacity <= maxCapacity) {
+            [tasks addObject:@(taskCapacity)];
+        }
+    }
+
+    NSLog(@"tasks: %@", tasks);
     
-    task = [[Task alloc] init];
-    task.requeredProcessResource = 10;
-    [self.taskQueue addObject:task];
+    return tasks;
+}
+
+- (NSInteger)sumCapacity:(NSArray *)tasks {
+    __block NSInteger sum = 0;
+    [tasks enumerateObjectsUsingBlock:^(NSNumber *taskRequeredResources, NSUInteger idx, BOOL *stop) {
+        sum += taskRequeredResources.integerValue;
+    }];
     
-    task = [[Task alloc] init];
-    task.requeredProcessResource = 30;
-    [self.taskQueue addObject:task];
-    
-    task = [[Task alloc] init];
-    task.requeredProcessResource = 20;
-    [self.taskQueue addObject:task];
-    
-    task = [[Task alloc] init];
-    task.requeredProcessResource = 40;
-    [self.taskQueue addObject:task];
-    
-    task = [[Task alloc] init];
-    task.requeredProcessResource = 30;
-    [self.taskQueue addObject:task];
-    
-    task = [[Task alloc] init];
-    task.requeredProcessResource = 10;
-    [self.taskQueue addObject:task];
-    
-    task = [[Task alloc] init];
-    task.requeredProcessResource = 30;
-    [self.taskQueue addObject:task];
-    
-    task = [[Task alloc] init];
-    task.requeredProcessResource = 20;
-    [self.taskQueue addObject:task];
+    return sum;
 }
 
 - (void)printResult {
     NSLog(@"******************************");
+    NSLog(@"GENERATION: #%ld", self.generationNumber);
     NSMutableString *resultString = [[NSMutableString alloc] init];
     
     for (int index = 0; index < self.population.count; index++) {

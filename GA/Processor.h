@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSMutableArray *taskQueue;
 
 - (void) postTask: (Task *) task;
+- (void)removeTask:(Task *)task;
 - (void) flush;
 
 @end

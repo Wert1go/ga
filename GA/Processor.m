@@ -30,6 +30,11 @@
     self.freeResourceSize = self.freeResourceSize - task.requeredProcessResource;
 }
 
+- (void)removeTask:(Task *)task {
+    [self.taskQueue removeObject:task];
+    self.freeResourceSize = self.freeResourceSize + task.requeredProcessResource;
+}
+
 - (void) flush {
     [self.taskQueue removeAllObjects];
     self.freeResourceSize = self.totalResourceSize;

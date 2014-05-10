@@ -34,9 +34,13 @@
     
     [descr appendFormat:@"\nfit %ld: %ld <---------\n\n", self.fitProIndex, pro.loadedBy];
     
+    __block NSInteger sum = 0;
     [self.processors enumerateObjectsUsingBlock:^(Processor *pro, NSUInteger idx, BOOL *stop) {
+        sum += pro.loadedBy;
         [descr appendFormat:@"pro %ld: %ld \n", idx, pro.loadedBy];
     }];
+    
+    [descr appendFormat:@"sum = %ld \n", sum];
     [descr appendString:@"--------------------------+\n"];
     
     return descr;
